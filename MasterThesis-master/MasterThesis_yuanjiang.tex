@@ -1,8 +1,8 @@
 \documentclass[senior]{IPSstyle}
 
   \Year{2018}
-  \Month{February}
-  \Author{44161542-3: YUAN JIANG}
+  \Month{September}
+  \Author{44161580-4: JIN YUTING}
 
   \Title{Cascaded Fully Convolutional Networks for Object Boundary Detection}
 
@@ -82,7 +82,17 @@ Thank you all!
   \caption{Object-level boundary detection is different from the traditional local edge detection, where the former mainly focuses on detecting the high-level semantic boundaries. The first image contains the annotations, which are marked with red lines, for object-level boundary detection.}\label{object_boundary_vs_local_edge}
 \end{figure}
 
-Object boundary detection aims at finding the enclosed boundary in which contains an object. Comparing to traditional edge detection, object boundary detection only considers the boundaries related to objects, despite of the low-level edges which have less semantic information (Fig. \ref{object_boundary_vs_local_edge}). So the object boundary can be easily applied for instance-level object segmentation, object proposal\cite{Yang2016, Zitnick2014}, biomedical engineering\cite{Lee2015, Quan2016, Ronneberger2015}, etc. While it is important and useful in various vision tasks, there are few literature about the object boundary detection due to three challenges: First, object boundary detection is a multi-scale problem;  Second, amount of local edges with less semantic information must be inhibited to gain a high-level boundary map; And the large variance of backgrounds and scenes.
+In recent years, as an efficient transportation tool, airplane becomes a more and more common choice for travelling people.
+Since 1980s, Chinese civil aviation industry has been developing dramatically. 
+The total transport turnover volume, passenger transport volume and postal delivery volume has increased by average speed of 17.5\%, 15.9\%, 14.9\%, much higher than other transportation modes and average China's GDP growth level. 
+However, the rapid development of the civil aviation industry has also led to the increasingly serious flight delays.
+Flight delay will not only cause huge economic losses for the airlines, but also bring great challenges to the normal operation of airports.
+Compared with developed country, Chinese civil aviation has higher flight delay frequency, longer delay time, more disputes between airline companies and passengers.
+Therefore, the flight delay problem of China civil aviation has become an industrial public problem, which has led to a broad and sustained attention of the whole society.
+
+In such circumstances, for Civil Aviation Administration Department and aviation transport enterprise, it has becomes an urgent problem to consider that how to control flight delay, improve flight punctuality rate and resolve disputes between passengers and airline companies caused by flight delays.
+
+In real world, light delay has many reasons,
 
 Traditional methods mostly focus on extract single-scale features for edge detection\cite{Canny1986, Sobel2014, Dollar2013, Shen2015}. However, objects has various scales in many applications, resulting in the demand of multi-scale descriptors to detect object boundaries. HED\cite{Xie2015} is the first to adopt the supervised multi-scale feature learning to edge detection, where the feature map from each stage of the convolution neural networks is supervised by the ground-truth labels. We follow the multi-scale feature extracting proposed by HED\cite{Xie2015} and extend it to object boundary detection, in which the multi-scale problem is considerably serious.
 
