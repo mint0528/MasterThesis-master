@@ -4,9 +4,9 @@
   \Month{September}
   \Author{44161580-4: JIN YUTING}
 
-  \Title{Cascaded Fully Convolutional Networks for Object Boundary Detection}
+  \Title{Flight schedule recovery with ant colony optimization}
 
-  \Advisor{Professor Jinglu HU}
+  \Advisor{Professor Fujimura}
 
 \usepackage{amssymb,amsmath}
 
@@ -73,62 +73,90 @@ Thank you all!
 
 
 
-\section{Background and Motivation}
-\subsection{back}
-\begin{figure}[t]
-  \centering
-  % Requires \usepackage{graphicx}
-  \includegraphics[width=15cm]{object_boundary_vs_local_edge.png}\\
-  \caption{Object-level boundary detection is different from the traditional local edge detection, where the former mainly focuses on detecting the high-level semantic boundaries. The first image contains the annotations, which are marked with red lines, for object-level boundary detection.}\label{object_boundary_vs_local_edge}
-\end{figure}
+\section{Background}
 
-In recent years, as an efficient transportation tool, airplane becomes a more and more common choice for travelling people.
+\subsection{Current status of Chinese Aviation Industry}
+In recent years, as an efficient transportation tool, airplane becomes a more and more common choice for travelling people. Statistics shows that in 2017 the number of passengers traveling by airplane is up to 4100 million worldwide. 
 Since 1980s, Chinese civil aviation industry has been developing dramatically. 
-The total transport turnover volume, passenger transport volume and postal delivery volume has increased by average speed of 17.5\%, 15.9\%, 14.9\%, much higher than other transportation modes and average China's GDP growth level. 
+From 2017 Civil Aviation Industry Development Statistics Bulletin, the total transport turnover volume was 1083.08 billion ton-kilometers, up 12.6\%, passenger transport volume was 9513.04 billion person-kilometers, up 13.5\%, and postal delivery volume was 243.55 billion ton-kilometers, up 9.8\%, compared with the data in 2016. 
+In the past five years, the major transport indicator of Civil Aviation Administration of Chinese all increased with a dramatic speed, much higher than other transportation modes and average China's GDP growth level.
+
 However, the rapid development of the civil aviation industry has also led to the increasingly serious flight delays.
-Flight delay will not only cause huge economic losses for the airlines, but also bring great challenges to the normal operation of airports.
 Compared with developed country, Chinese civil aviation has higher flight delay frequency, longer delay time, more disputes between airline companies and passengers.
-Therefore, the flight delay problem of China civil aviation has become an industrial public problem, which has led to a broad and sustained attention of the whole society.
+In the first two quarters of 2017, the average flight punctuality rate of Chinese Civil Aviation was 66.22\%, slipped 9.27\% year-on-year, with an average delay of 30 minutes, increased 11 minutes compared with the same period last year. With the influence of summer weather, the alignment rate dropped to 50\%.
+Meanwhile, the total number of complaints received in 2017 increased by 29.3\% over the same period last year.
+Therefore, flight delay problem of Chinese civil aviation has become an industrial public problem, which has led to a broad and sustained attention of the whole society.
 
-In such circumstances, for Civil Aviation Administration Department and aviation transport enterprise, it has becomes an urgent problem to consider that how to control flight delay, improve flight punctuality rate and resolve disputes between passengers and airline companies caused by flight delays.
+In such circumstances, for Civil Aviation Administration Department of China and aviation transport enterprise, it has becomes an urgent problem to consider that how to control flight delay, improve flight punctuality rate and resolve disputes between passengers and airline companies caused by flight delays.
 
-In real world, light delay has many reasons,
+\subsection{Causes of flight delay}
+In daily operation of airline company, flight delays are happening almost everyday.
+According to the regulations on the normal statistics of civil aviation flights, flight delays are defined as:
+\begin{itemize}
+    \item flights that still did not take off in 15 minutes after the departure time published in timetable.
+    \item flights that did not open the hatch at the arrival time published in timetable.
+\end{itemize}
+For this common phenomenon, there are some mean reasons. 
 
-Traditional methods mostly focus on extract single-scale features for edge detection\cite{Canny1986, Sobel2014, Dollar2013, Shen2015}. However, objects has various scales in many applications, resulting in the demand of multi-scale descriptors to detect object boundaries. HED\cite{Xie2015} is the first to adopt the supervised multi-scale feature learning to edge detection, where the feature map from each stage of the convolution neural networks is supervised by the ground-truth labels. We follow the multi-scale feature extracting proposed by HED\cite{Xie2015} and extend it to object boundary detection, in which the multi-scale problem is considerably serious.
+Weather factors, which cause the most frequent flight delays, should be considered first. 
+Bad weather such as thunder, rain, fog and so on is force majeure events which is unpredictable and unavoidable. 
+However in actual operation, fine weather at departure airport doesn’t mean flights can take off successfully. 
+Weather factors are usually analyzed at three points.
+\begin{enumerate}
+\item Whether the weather condition of departure airport is suitable for take-off. 
+\item Whether the weather condition of destination airport is suitable for landing.
+\item Whether the weather condition during the flight route is suitable for flying.
+\end{enumerate}
 
-What's more, the target of traditional edge detection is to identify the discontinuities of image brightness, regardless of the semantic information which indicate whether the edges enclose an object in it. This is the root why some traditional edge detection methods fail to detect the object boundary. We propose the cascaded fully convolutional networks \emph{(FCNs)}\cite{Long2015} with holistic training and testing to overcome the shortages of traditional edge detectors. By recursively connect the FCNs rather than simply stacked the convolution layers, our networks have the ability to inhibit the meaningless edges inside the objects and can be easily interpreted.
+In addition, even for same aircraft type, different airlines has great differences in specific safety standards.
+And whether the flight will take off is also dependent on captain's judgment. 
+The captain's decision on the current aircraft condition, airport and weather is also quite different.
 
-Another issue for object boundary detection is the large variance of backgrounds and scenes. Our networks draw inspiration from the related works about neuronal boundary detection in Electron Microscopy \emph{(EM)} images, so we firstly make an effort to apply them on two mainstream datasets for neuronal boundary detection and neuronal segmentation in EM images. To extend the cascaded framework into common cases, we then test our networks in a large natural image dataset, PASCAL Contour\cite{Yang2016}.
+The second leading reason is air traffic control. 
+Due to recently explosive growth of air traffic flow, it is difficult for current flight management system to adapt. 
+On the one hand, the development of corresponding ground facilities, equipment and service assurance can not keep up with high growth speed of civil aviation industry; 
+on the other hand, current air route structure is no longer reasonable for increased air flow. 
+So it has to be strictly restricted to the airspace.
+And Air Force Activities may also lead to sudden air traffic control. In this case, passenger can only wait, no time to predict.
 
-We highlight three points in the thesis. (1) extending the multi-scale holistic network of HED\cite{Xie2015} to the multi-scale multi-recursive network for object boundary detection. (2) cascaded network structure with end-to-end training, which is easy to be integrated with other fully convolutional networks. (3) and systematic experiments in two applications to show the reliability and interpretability of our architecture.
+The third reason is aircraft failure.
+Although most of hidden troubles can be dealt with in routine inspection, there is no guarantee that the aircraft equipment won’t suddenly fail. 
+In order to ensure safety and completely eliminate hidden dangers, it always causes some delay. 
+And if the airport that aircraft failure occurs is not airline’s aircraft maintenance base, the delay time will be so long and can’t be determined, even causes flight cancellations. 
 
+The final reason is about passengers. 
+Among all the reasons contributing to flight delay, the human factor of passenger's cause has become a "new growth point".
+In order to wait or look around for a few passengers who are late, lost or does not heard of announcement, may also cause flight delays.
+And sometimes a few minutes of delay may meet with longer delays caused by weather or air control.
+
+Flight delays caused by reasons above is all dependent delay. In real life, we probably meet the delay caused by preceding flight delay. 
+Usually, airlines plan flight schedule ahead of time, and to make profit maximization, they set flight schedule as intensive as possible. 
+However, the shortage is that reduces robustness of whole airline network. With high density scheduling, once accidents occur, coordination becomes difficult.
+Any omissions in the preceding flight may trigger a chain reaction of the subsequent flights. and the later flight is, the longer its delay time will be.
+This kind of delay is going to be a more and more serious problem that forces airlines to confront.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\section{Application Scenes}
+\section{Motivation}
+The operating goals of airline companies is reducing costs and improving profits as much as possible.
+But accidents may disrupt original flight schedule, and cause economic losses to airline companies.
+For airline, this loss can be divided into direct and indirect part.
 
-\subsection{EM Images}
-With the development of Electron Microscopy \emph{(EM)}, neuroscientists and cognitive scientists are able to study the connection between structures and functions of neurons from the high-resolution EM images\cite{Lichtman2011}. The first step for the study is often to reconstruct the structure of neuronal circuits. However it would take thousands of hours for an expert to annotate a large number of EM images, which motivates researchers to explore some automatic reconstructing algorithms. To reconstruct the neuronal circuits, we firstly reconstruct the 2D structure of neurons from a serials of EM images produced by a serial section EM. Then the stack of 2D neuron structure will be concatenated into the 3D neuron structure. 
+Direct economic losses include loss of flight delay in ground-holding, loss of delay caused by air traffic jam, cost of accommodation for stranded passengers caused by long time delay or flight cancellation, and cost of temporary aircraft deployment. These extra costs directly increase airline company’s operation cost. 
 
-As the basic step, 2D neuron reconstruction has drawn a lot of attentions, especially those adopting the powerful deep neural networks\cite{Ciresan2012, Lee2015, Quan2016}. All these approaches convert the reconstruction problem into a 2D boundary detection issue, since the later is easier to be modeled as a binary classification problem and thus there are many literatures and tools can be used to solve it. So long as the neuron boundary is decided, the neuronal circuit can be segmented using simple graph-based methods such as the watershed algorithm\cite{Zlateski2015}. 
+In addition, flight delays also affect airline’s normal profit, cause indirect loss to airline company.
 
-Neuronal boundary detection in EM images is a special case of object boundary detection. There are several commons between neuronal boundary detection and object boundary detection, for example, both them focus on the high-level boundary, with less consideration about the low-level local edges. In neuronal boundary detection, to be specific, the low-level local edge includes the ones from background and EM noises, and also the ones produced by confounding structures like nucleus, mitochondria, etc. Hence, traditional edge detectors\cite{Xie2015, Canny1986, Sobel2014} often fail to detect the boundary in EM images (Fig. \ref{object_boundary_vs_local_edge}). Deep neural networks are also widely used to detect neuronal boundary and have gained promising progress\cite{Ciresan2012, Lee2015}, while lack of Multi-recursive-input vs. Single-recursive-input. Different from all these works, we use a lot of experiments not only to show the performance of the proposed cascaded fully convolutional networks in neuronal boundary detection, but also to explain how the proposed architecture removes the insider local edges and background noises, and strengthens the boundary with low-contrast.
+And for passengers, flight delay is also unpleasant experience. Flight delays or cancellation waste passenger’s private time and disrupt travel plans.
 
-We compare our method with competitors on two mainstream datasets for neuronal segmentation, the Piriform dataset\cite{Lee2015} and the ISBI 2012 Challenge dataset\cite{Ronneberger2015}.
+Besides huge economic losses for the airlines, flight disruption also bring great challenges to the normal operation of airports. Large scale of flight delays would disrupt airport running scheduling and cause a series of chain reactions. 
 
-\subsection{Natural Images}
-Although our idea is firstly motivated by the problem we met in neuronal boundary detection, we also take lots of attentions in extending the proposed models into more commonly used applications, such as the object boundary detection in natural images. Given the object boundary map of a natural image, we can easily obtain the object proposal, object segmentation\cite{Arbelaez2011, Pinheiro2015}, object detection\cite{Everingham2010, Girshick2015}, and recognize object using shape based classification methods\cite{Wang2014, Shen2014CCPR, Shen2016PRL}.
-
-Object boundary detection in natural images is still a difficult problem due to the fact that objects vary in colors, brightness, scales, shapes, textures and gestures. One can hardly recognize the boundaries of all kinds of objects in natural images with only one of the features. Thus, many traditional edge detection methods\cite{Canny1986, Sobel2014} do not perform well when directly applying them for high-level object boundary detection. 
-
-Performance benchmark is done on the famous PASCAL VOC dataset\cite{Everingham2010}. PASCAL VOC is one of the most famous object detection and segmentation challenge held once a year. We collect the training and validation data from PASCAL VOC 2007, to PASCAL VOC 2012. Ground-truth boundary maps are obtained from the instance-level segmentation annotations provided by the official. Comparison results show our cascaded network outperforms not only the traditional edge detectors but also the deep networks without cascade.
+Therefore, when flight schedule was disrupted, how to make rescheduling in a short time has become an urgent need for the civil aviation industry. Rescheduling means to make a new schedule of affected flights based on original timetable.  The target is not only schedule the delayed flights with the best scheme, but also use as less time as possible. The rapider the recovery could be, the more the flight delay accumulation and the economic loss can be reduced.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 
 \section{Organization of the thesis}
-The rest of this thesis is structured as follows: Chapter \ref{related_work}  introduces some related works in traditional edge detection methods and neuronal boundary detection methods, concluding their progresses and shortages. In Chapter \ref{methodology}, we describe the proposed cascaded fully convolutional networks, giving an insight into why we design such a architecture and how it works. To evaluate the performance and verify the interpretation, Chapter \ref{experiments} tests our models on three datasets, two for neuronal boundary detection / segmentation in EM images, and one for object boundary detection in natural images. The thesis ends in Chapter \ref{conclusions} with conclusions and future works of this research.
+The rest of this thesis is structured as follows: Chapter 2 introduces some related works of past research in flight disruption management area. Chapter 3 I introduce the application of ant colony optimization which is the main method of solving flight rescheduling problem, including the novelty of my research. In Chapter 4 I will explain implement of ant colony optimization including evaluation process. And Chapter 5 is experiment using real world data. The last part, Chapter 6 describes the conclusion and future works of this research.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Chapter 3
 \chapter{Related Work} \label{related_work}
@@ -136,218 +164,203 @@ The rest of this thesis is structured as follows: Chapter \ref{related_work}  in
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Comparing with traditional edge detection, object boundary detection focuses on the high-level semantic information about the objects appeared in the image. It is useful in many applications and has many advantages to the local edges, however, object boundary still lacks of researches in literature. So we will start from traditional edge detection methods to seek the recommendation. On the other hand, neuronal boundary detection in EM images has achieved considerable progresses. Deep neural networks perform well in the neuronal boundary detection, inspiring us to explore a more powerful and explainable one to improve the boundary detection results for not only the EM images, but also the natural images.
 
 
-\section{Traditional edge detection}
 
-Edge detection is a fundamental task with a long history in computer vision. Contrast to object boundary detection, local edge detection concerns all the pixels with color, brightness, texture, and other properties changing sharply in local parts of an image. 
-
-\subsection{Hand-crafted feature based methods}
-
-Canny\cite{Canny1986} can be seen as the pioneer of computationally extracting edges from digit images. Canny uses image gradient to get the edges. Firstly, the input RGB image should be converted to a greyscale one, whose 2D gradient map will be next calculated using the Sobel\cite{Sobel2014} filters. Then the non-maximum suppression is applied in the gradient map to get the thinned edges. After that Canny proposed to adopt an empirically selected double threshold to filtering the edges, where the edges higher than the high threshold will be marked as the "strong edges", the edges lower than the low threshold will be marked as background, and the rest of edges are so called the "weak edges". Canny descriptor use only the brightness gradient of the image, but has almost no ability to utilize the color and texture information of the image, much less the semantic information.
-
-The followers \cite{Malik2001, Arbelaez2011, Krahenbuhl2015} tend to combine brightness, color and texture gradients to make a better use of RGB inputs. All these methods are patch-based learning methods. In training phase, random sampled mini patches are cropped from original input image. Features of these patches are extracted using various cues mentioned above. Then the features of training samples will be fed into a two-class classifier, such as Support Vector Machine and Random Forest, to judge whether the central pixel of the sample is an edge pixel or not. In test phase, a one-step sliding window will be applied for a dense probability map about edge. To detect edges with more semantic meaning, the \emph{gPb}\cite{Arbelaez2011} computes gradients at different scales, but resulting in a huge increase of computational load. Lim et al.\cite{Dollar2013} rather propose a structured feature learning pipeline for an effective and fast detection.
-
- All these methods choose hand-crafted features based on local cues, with few design for object-level boundary detection. Experiments in Chapter \ref{experiments} will show their shortages in object boundary detection tasks.
-
-\subsection{Deep learning based methods}
-
-Deep Learning, especially the Convolutional Neural Networks \emph{(CNNs)}, developed rapidly in recent years. The CNNs showed their power firstly in the large-scale object recognition challenges. AlexNet, proposed by Krizhevsky et al.\cite{Krizhevsky2012} in 2012, improved the top-5 rate in ILSVRC-2010 and ILSVRC-2012 competition by around 8\%, which drives researchers' trying {Arbelaez2011}on applying the deep feature extraction for most of the computer vision tasks. VGGNet\cite{Simonyan2014}, GoogLeNet\cite{Szegedy2015} and ResNet\cite{He2016} are the followers of \cite{Krizhevsky2012}. All these works tend to find the ways to train a deeper or wider network so that the abstract object-level feature can be better learned and extracted. In the next years, CNNs are also widely applied for object detection\cite{Girshick2014, Girshick2015, Ren2015}, object segmentation\cite{Pinheiro2015}, and object contour detection\cite{Shen2015, Kivinen2014, Ganin2014}.
-
-Similar to \cite{Lim2013}, Shen et al.\cite{Shen2015} cluster the edge structures into several subclasses and convert the two-class classification task to a multi-class one. By this way, the deep networks are able to learn different model parameters for each subclass, and the results are more interpretable. \cite{Shen2015} utilizes the deep features to capture high-level object information and outperforms all the traditional hand-crafted feature based methods. However, in testing phase, the features extracted by fully connected layer must be fed into a structured random forest classifier\cite{Dollar2013} for the final contour detection result. The two-step learning limits the performance of deep networks. What's more, due to the existing fully connected layers, inputing the original images with various scales is forbidden. So the authors\cite{Shen2015} have to adopt the patch-based training and testing, leading to a low detection speed.
-
-In 2014, Fully Convolutional Networks \emph{(FCNs)}\cite{Long2015} are proposed to handle with the per-pixel annotation problem, such as the object segmentation in the famous PASCAL VOC Challenge\cite{Everingham2010}. Developed from VGGNet, FCNs remove the last fully connected layers of it and replace with 1 \(\times\) 1 convolution layers, which releases the limitation of the input size. A non-parameter deconvolution layer is followed by the last convolution layer to up-sample the low-resolution feature maps into probability maps with same resolution of the input. Finally, after properly cropping, the output probability maps will have the same size with the input. When training, these probability maps can be used to calculate the pixel-wise loss with ground-truth labels. FCNs enable the end-to-end training and testing of CNNs for such a pixel-wise prediction task. With FCNs, the precision and speed will not be restricted by the sliding window scheme. 
-
-Features from different stages of the convolution neural networks have the multi-scale information\cite{Xie2015}. Xie et al.\cite{Xie2015} propose to make a full use of these information by extracting features from each stage of the FCNs, then up-sampling them to the same size with the input, which results in multi-scale outputs called side-outputs. All the side-outputs and the fusion of these side-outputs will contribute on the loss, where both the low-level stages with high resolution but little semantic information, and the high-level stages with low resolution but much semantic information can be trained easilier. Benefited from the holistic training and multi-scale features, HED\cite{Xie2015} achieves great performance in the famous edge detection benchmark, BSDS 500\cite{Arbelaez2011}, improving the F-measure\cite{Arbelaez2011} from 0.756\cite{Shen2015} to 0.782. Note that the F-measure of human being's annotation is 0.8.
-
-\section{Object Boundary Detection in Natural Images}
-
-Although HED\cite{Xie2015} and other edge detection methods\cite{Shen2015, Dollar2013, Arbelaez2011} have achieved considerable success in relatively low-level edge detection, they perform bad when applied for the high-level \emph{"object-only"} boundary detection\cite{Yang2016}. Fully Convolutional Encoder-Decoder Network \emph{(CEDN)}\cite{Yang2016} is the pioneer to distinguish object-level boundary detection from traditional local-level edge detection. CEDN uses VGG-16\cite{Simonyan2014} as the encoder and designs an approximately symmetric but light-weighted decoder. During training, it fixes the model parameters of the encoder and only updates the parameters of the decoder. 
-
-CEDN outperforms all the competitors on the large PASCAL VOC Contour Dataset\cite{Yang2016} in object boundary detection benchmark. However, it still has several problems: 
-(1) the encoder network does not benefit from the training data at all; 
-(2) to achieve the performance in the leaderboard, it requires all the training data to be processed for 30 times, due to the comparatively deep architecture.
-
-\section{Neuronal Boundary Detection in EM Images}
-
-Neuronal segmentation is the fundamental step to learn the structures of neural cells and analyze the relationship between the structures and the functions\cite{Lichtman2011, Helmstaedter2013, Sporns2005}. In early days, however, it would take an expert with professional knowledge lots of time to recognize the segment of neuronal circuits\cite{Helmstaedter2013} in massive EM images, which motivated researchers to find a automatic algorithm to annotate the neuronal segments. People find the key to the neuronal segmentation is to detect the membranes of the cells, while suppressing the local edges within them\cite{Laptev2012, Kaynig2010, Kumar2010, Seyedhosseini2011}. So that graph-based algorithms such as watershed\cite{Najman1996, Uzunbas2014, Zlateski2015} and graph cut\cite{Boykov2001} can be directly used to convert the boundary to segmentation.
-
-To detect neuronal boundary is to extract membranes in an EM image. In this degree, Neuronal Boundary Detection can be seen as a special case of Object Boundary Detection, where the \emph{"object"} in the former is only the neuron circuit. 
-
-Deep learning based methods are able to meet the demand of different applications, by learning the parameters of not only the classifiers, but also the feature extractors. With the rapid development of deep networks, adopting them into the hard neuronal segmentation tasks becomes popular among researchers. Comparing with traditional hand-designed features, deep features need less experts' knowledge to design the feature extractors and can make a full use of the data, which is proved to be effective in neuronal boundary detection tasks\cite{Ciresan2012, Ronneberger2015, Quan2016, Fakhry2017, Lee2015}.
-As the winner of the famous ISBI 2012 EM Segmentation Challenge\cite{Carreras2015}, Ciresan et al.\cite{Ciresan2012} successfully apply the deep neural networks with a stack of \emph{convolution-subsampling} units for membrane pixel detection. Ronneberger et al.\cite{Ronneberger2015} propose U-net, which reuses the features of the layers in the encoder part by merging them with the layers in the decoder part, to detect neuronal boundary and segment EM circuits. With the benefit of fully convolutional network structure and multi-level feature concatenating, U-net shows the efficiency in neuronal segmentation by outperforming the competitors in ISBI 2012 by a large margin. With the proposal of ResNet\cite{He2016} in object recognition and detection, Quan et al.\cite{Quan2016} and Fakhry et al.\cite{Fakhry2017} try to implement the deep residual units in their fully convolutional networks, which is also proved to be effective in neuronal boundary detection issues. 
-
-However, most of these works engraft the state-of-the-art network architectures proposed in other vision works as a \emph{"black-box"} to boost the performance of neuronal boundary detection. It is necessary to seek an interpretable and effective approach, so that it can be theoretically comprehensive and enlighten the relative works in the future.
-
-\begin{figure}[t]
-  \centering
-  % Requires \usepackage{graphicx}
-  \includegraphics[width=15cm]{vd2d3d.png}\\
-  \caption{Illustration of VD2D3D, a recursive deep network with the stepwise training.}\label{Lee2015}
-\end{figure}
-
-Most related to our work is Very Deep 2D-3D network \emph{(VD2D3D)} proposed by Lee et al.\cite{Lee2015}. A Very Deep 2D \emph{(VD2D)} network is firstly trained using patches randomly cropped from the images. The model of VD2D will be then used to produce the predictions of a stack of images produced by the serial section EM. \cite{Lee2015} believes the adjacent slices will help to detection the boundary, so VD2D3D concatenates the raw image and the prediction of its adjacent slices, produced by VD2D, as the new training materials of VD2D and recursively fine-tunes last several layers of VD2D.  We find in experiments that \cite{Lee2015} has three main problems: 
-(1) it lacks of multi-scale features to better represent the complex neural membranes; 
-(2) stepwise training limits the learning ability of the recursive deep networks; 
-(3) patch-based testing relies on the sliding window pipeline, which seriously slow down the testing speed. 
-Inspired by \cite{Lee2015}, we develop a cascaded fully convolutional network with multi-recursive inputs and train it end-to-end. The proposed network overcomes the shortages of \cite{Lee2015} to achieve the state-of-the-art performance on a neuronal segmentation benchmark\cite{Lee2015} and a large natural object boundary detection benchmark\cite{Ronneberger2015}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 \chapter{Methodology} \label{methodology}
 
-In this part, we will introduce the proposed Cascaded Fully Convolutional Networks for object boundary detection. First, the cascaded network structure with multi-recursive inputs is presented. Then we will describe our end-to-end training, where every part of the cascaded network can benefit from the training data. Next, in Section \ref{testing phase}, we will demonstrate how to apply the learned fully convolutional model for the accurate yet fast detection. In the last section of this chapter, we spend a lot of ink to lead you into the insight of the proposed architecture, explaining how it works.
+\section{Schedule and Cost}
+
+\subsection{Flight adjustment method}
+When a scheduled flight timetable is disrupted, for example, the bad weather causes airport closure or aircraft failure happens, we need to adjust the following flights. In general, there are some typical methods for adjustment.
+\begin{enumerate}
+    \item Adjust following flights’ departure time. This method can be considered as we allow delay in adjustment. Sometimes, delay is unavoidable, but we can make it as less as possible.
+    \item Cancel the flight. In some circumstance, cancelling a flight and arrange redeeming flight on the next day will be better than delay for a long time. This is a method to make more reasonable use of resource.
+    \item Change original aircraft-flight set. This means we assign a flight to an aircraft which different from the one on original schedule. Cause some aircraft may be spare and can be arranged for extra flights, this measure can utilize aircraft resource more effective.
+    \itemTransfer aircraft from other airports. In actual, this is not a common approach. Transferring means the aircraft need to take a flight with no passenger, so this method is only used when the disrupted flight is so important that cannot be cancelled. 
+\end{enumerate}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Objective Function}
+In this research, we use total cost to evaluate each feasible solution. When a new feasible timetable be scheduled, the total cost can be calculated as below.
+\begin{equation}
+    Total\ cost=C_a+C_d+C_c+C_p
+\end{equation}
+\begin{equation}
+    C_a = \sum_{f\in F} x_{f}*P_1
+\end{equation}
+\begin{equation}
+    C_d =\sum_{f\in F} T_{d_f}*P_2
+\end{equation}
+\begin{equation}
+    C_c=\sum_{f\in F} z_{f}*P_3
+\end{equation}
+\begin{equation}
+    C_p=\sum_{f\in F} y_f*T_{d_f}*NP_f*P_4+\sum_{f\in F} z_f*NP_f*P_6+\sum_{f\in F} (y_f+z_f)*CP_f*P_6
+\end{equation}
+
+\begin{table}
+\renewcommand{\arraystretch}{1.0}
+\caption{Parameters and Variables}
+\label{piriform_dataset}
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+\multicolumn{1}{|c|}{Var}
+&\multicolumn{1}{c|}{Meaning}
+\\
+\hline
+\(A\)	&	Set of all aircraft \(a\)
+\\	\hline
+\(F\)	&	Set of all flights \(f\)
+\\	\hline
+\(C_a\) &   Cost of changing aircraft.
+\\  \hline
+\(C_d\) &   Cost of delay.
+\\  \hline
+\(C_c\) &   Cost of cancellation.
+\\  \hline
+\(C_p\) &   Cost of passenger satisfaction.
+\\  \hline
+\(x_f\)	&   \(=0\), if flight\(f\) assigned to the same aircraft as original schedule; \(=1\), if not.
+\\	\hline
+\(y_f\) &   \(=1\), if flight\(f\) is delayed; \(=0\), if not.
+\\  \hline
+\(z_f\) &   \(=1\), if flight\(f\) is cancelled; \(=0\), if not.
+\\  \hline
+\(T_df\) &   The total delay time of flight\(f\) (minutes).
+\\  \hline
+\(NP_f\) &  Total number of passengers on flight\(f\).
+\\  \hline
+\(CP_f\) &   Number of passengers following with connecting flight on flight\(f\)
+\\  \hline
+\(P_1\) &   Cost of changing original aircraft for one flight.
+\\  \hline
+\(P_2\) &   Cost of delay for one flight per minute.
+\\  \hline
+\(P_3\) &   Cost of cancelling one flight.
+\\  \hline
+\(P_4\) &   Cost of maintaining passenger satisfaction for delaying flight per minute per passenger.
+\\  \hline
+\(P_5\) &   Cost of  maintaining passenger satisfaction for cancelled flight per passenger.
+\\  \hline
+\end{tabular}
+\end{center}
+\end{table}
+
+Based on the one in \cite{sousa2015airline}, the module in this research made some change. Corresponding to different adjustment method, the total cost is divided into four parts fig.\ref{fig:cost structure}: cost of changing aircraft, cost of delay, cost of cancellation and cost of passenger satisfaction maintenance. Evaluation is in airline company’s view, so the passengers’ satisfaction can be quantified as a kind of cost. And in this part, we consider a special class of passengers with connecting flights. These passengers purchase more than one tickets at one-time and need to take a transit in midway. So it will do great effect on the rest of their journey if the first flight in connecting flights is delayed. There will also be probably for them to miss the next flight. 
+
+To calculate the cost of part, we need to know the status of each flight in new feasible solution. 
+In this research, there are three indicators to represent the three flight status: changed aircraft, delayed, cancelled. 
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=300]{MasterThesis-master/Coststructure.png}
+    \caption{Structure of total cost}
+    \label{fig:coststructure}
+\end{figure}
+
+\(x_f\) indicates the status that if the flight \(f\)is assigned to the same aircraft as original schedule. \(y_y\) indicates the status that if the flight \(f\) is delayed. And \(z_f\) indicates the status that if the flight \(f\) is cancelled. \(x_f\), \(y_f\) and \(z_f\) is Boolean value(0 or 1).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Ant colony optimization} \label{Ant colony optimization}
+
+In my research, I apply ant colony optimization for flight rescheduling problem. And in evaluation part, I use cost to measure feasible solutions of each iteration. I build the model based on past thesis and enlarge the scope of the problem. I will explain specifically below. 
+
+\begin{figure}[h]
+  \centering
+  % Requires \usepackage{graphicx}
+  \includegraphics[width=15cm]{MasterThesis-master/ACO-1.png}\\
+  \caption{At beginning ants choose paths randomly.}\label{fig: aco1}
+\end{figure}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=15cm]{MasterThesis-master/ACO-2.png}
+    \caption{Ants leaves pheromone on the paths passed.}
+    \label{fig:my_label}
+\end{figure}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=15cm]{MasterThesis-master/ACO-3.png}
+    \caption{Finally ants will find optimum route with higher pheromone concentration.}
+    \label{fig:my_label}
+\end{figure}
+
+As a meta-heuristic algorithm, ant colony optimization is an optimization algorithm simulating foraging behavior of ants. The basic principle of ant colony algorithm is:
+\begin{enumerate}
+    \item During foraging process, ants release pheromones on the passed path.
+    \item When an ant meets an intersection that has not yet passed, it will pick one direction randomly. At the same time, the ant releases pheromones on the path.
+    \item When ants later met the intersection, they will the path with a higher concentration of pheromone.
+    \item The concentration of pheromone is related to the length of path and is inversely proportional to it. The shorter the path is, the higher the concentration can be.
+    \item When the number of ant increases, the pheromone concentration on the optimal path is increased.
+    \item As time goes on, the whole ant colony finally find the optimal foraging route.
+\end{enumerate}
+
+Ant colony algorithm  was used to solve traveling salesman problem at beginning. 
+So in my module, I try to use a whole path to represent a feasible schedule solution. 
+Considering both flights and aircraft as cities in TSP,  the path between each two cities indicates the relationship between flights and flights or aircraft and flights. 
+And in flight schedule problem, the final goal is minimum the whole cost. So when we get a feasible route, we can calculate the total cost and consider it as the distance in TSP.
+
+In this algorithm, for each iteration, we have more than one ants and every ant can be seen as a simple agent. There are some constraints:
+\begin{enumerate}
+    \item One iteration only allows each ant move one step;
+    \item For each step, each ant leaves pheromones on the branches that they pass through;
+    \item The probability for ants to choose next node is related to the pheromone concentration contained in the linked branch;
+    \item Use tabu list to represent nodes that have been passed.
+\end{enumerate}
+
+For basic ant colony algorithm, there are two main process:
+\begin{enumerate}
+    \item State Transition:
+    
+    In each iteration, every ant moves one step, the probability of ant \(k\) to move from state \(i\) to state \(j\),can be calculated by this function:
+    \begin{eqnarray}
+    p_{ij}^k &=&
+    \begin{cases}
+    \cfrac{[\tau(i,j)]^\alpha +[\eta(i,j)]^\beta}{\sum_{z\in J_k(i)} [\tau(i,z)]^\alpha +[\eta(i,z)]^\beta} &, j\in allowed_k \cr
+    0 \cr
+    \end{cases}
+    \end{eqnarray}
+    In this function, \(\tau(i,j)\) means the pheromone concentration on the branch between node \(i\) and \(j\), \(eta(i,j)\) represents the desirability of transforming states.(In TSP it is \(1/distance\), but in this research it is \(1/cost\)). 
+    
+    \(\alpha\) is heuristic factor, controls influence of residual pheromone concentration. The larger the \(\alpha\) is, the greater the possibility of ants choosing the path they have passed before can be, and The randomness of search will be weakened. \(\beta\) is expectation heuristic factor. When \(beta\)increased, the convergence speed also increased, and the algorithm is more likely to fall in local optimum. 
+    Usually, the range of \(\alpha\)is \([0,5]\), and the range of \(\beta\) is  \([0,5]\).
+    \item Pheromone Update
+    
+    For process of updating pheromone matrix, there have been three modules.
+    \begin{itemize}
+        \item Ant-Cycle module:  The increment of pheromone is related to the whole route of search, not related to the specific path choice. This approach updates pheromone amount of all paths on the route after completing a complete path search. It is a global updating method.
+        \item Ant-Quantity module: The increment of pheromone is related to the distance of specific path(i,j). This approach is a local updating method and updates pheromone amount on the path after each step of ants.
+        \item Ant-Density module: The increment of pheromone is fixed and is also a local updating method.
+    \end{itemize}
+    In this research, cause the cost can only be calculated after we get a complete fleet schedule, I choose global updating method for each iteration.
+    
+    And at time \((t+n)\), the pheromone concentration on the path\((i,j)\) can be calculated as:
+    \begin{equation}
+        \tau _{ij}(t+n)=(1-\rho)\cdot \tau _{ij}(t)+\Delta\tau _{ij}(t)
+    \end{equation}
+    \begin{equation}
+        \Delta\tau _{ij}(t) = \sum_{k=1}^m \Delta\tau _{ij}^k(t)
+    \end{equation}
+    \(\rho\) represents the evaporation factor. If \(\rho\) is too small, the pheromone remained on each path will be too much, and influence the convergence speed; but if \(\rho\) is too big, some effective path will be skipped. 
+    
+    \(m\) is the total number of ant colony. The larger the \(m\) is, the  more accurate the result will be. But if the \(m\) is too big, it will slow down the speed of computing.
+\end{enumerate}
+
+ 
+
+
+\section{Innovation} \label{innovation}
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{figure}[t]
-  \centering
-  % Requires \usepackage{graphicx}
-  \includegraphics[width=15cm]{cascade_structures.png}\\
-  \caption{Three types of cascade-like networks: (a) cascaded network with single-recursive input; (b) cascaded network with multi-recursive inputs; (c) single-stage network with recursive inputs to fine-tune itself.}\label{cascade_structures}
-\end{figure}
 
-\section{Network Structure} \label{network structure}
-
-As shown in Fig. \ref{cascade_structures}, we considered several methods to assemble our cascaded networks. Fig. \ref{cascade_structures}(a) shows the structure of single-recursive-input cascaded fully convolutional networks, which feeds the final output of the former sub-network into the next sub-network, recursively. Each of these sub-networks is the fully convolutional network with the same structure but unshared model parameters. Fig. \ref{cascade_structures}(b) illustrates the cascaded structure with multi-recursive inputs, our final choice. In this design, the predictions from not only the last layer but also the side-output layers\cite{Xie2015} will be the recursive inputs of the next stage, so we name it as multi-recursive-input design. With contrary to the single-recursive-input one, the proposed architecture makes the full use of features with multiple scales extracted from the former sub-network. Fig. \ref{cascade_structures}(c) is another design for constructing such a multi-stage network, where there is only one sub-network, but fine-tuned time after time by recursively feeding the  predictions into itself. To unfold the recursive connection of the left side of Fig. \ref{cascade_structures}, we can get the equivalent network as shown in the right side. The unfolded version is much similar to the proposed architecture. However, we train all the parameters of sub-networks jointly in the proposed cascaded network, while Fig. \ref{cascade_structures}(c) fixes the parameters of former sub-networks and only fine-tune the ones of the last sub-networks. Experiments in Chapter \ref{experiments} show our design is more effective and efficient than the others.
-
-To be more specific, our network used in object boundary detection can be illustrated as Fig. \ref{network}. It consists of several stages, three in the default setting, each of which is a fully convolutional network. 
-By default, each sub-network is built based on the holistically-nested network\cite{Xie2015}, which is converted from the famous VGG-16\cite{Simonyan2014} network. So the subnet has five stages of the convolution-pooling structure, of which the receptive fields are increased with the stepwise dilated strides. For each level, the side-output is obtained by up-sampling the feature from the last convolution layer of the level and activating it using a sigmoid layer. We mark the side-outputs of level 1 to 5 as \(S_{1}^{(p)}\), \(S_{2}^{(p)}\), \(S_{3}^{(p)}\), \(S_{4}^{(p)}\), \(S_{5}^{(p)}\), respectively, where \(p \in{1, 2, 3}\) denotes the order of the sub-network. 
-
-Benefited from the receptive field sizes increasing, side-outputs are able to capture features in different scales naturally, without input scaling. Multi-scale features are then fused using the 1 \(\times\) 1 convolution filters to produce the final predictions for the stage 1, 2, 3, named \(F^{(1)}\), \(F^{(2)}\), \(F^{(3)}\), respectively. And the best prediction we used in benchmarks is the fusion of \(F^{(1)}\), \(F^{(2)}\) and \(F^{(3)}\). As mentioned above, there are abundant multi-scale information stored in the side-outputs, so we concatenate all the side-outputs with fused prediction and the raw image along with the color channel as the input of the next stage, which called the multi-recursive-input schema. 
-
-We choose HED\cite{Xie2015} as the sub-network in each stage to carry on the multi-scale feature extraction and holistic deep supervision proposed by \cite{Xie2015}. Here, the deep supervision refers to use the ground-truth to supervise the prediction of not only the last output, but also the side-outputs\cite{Xie2015}, which avoids gradient vanishing in some degree and allows shallow layers efficiently learn the parameters from data. 
-
-\begin{figure}[t]
-  \centering
-  % Requires \usepackage{graphicx}
-  \includegraphics[width=15cm]{network.png}\\
-  \caption{Illustration of the proposed cascaded fully convolutional network for object boundary detection.}\label{network}
-\end{figure}
-
-
-\section{Training Phase} \label{training phase}
-
-Object Boundary Detection can be formulated as a pixel-wise two-class classification problem. Given a training image \(X = (X(j), j = 1, 2, ..., |X|)\) with totally |X| pixels over the spatial dimensions, our goal is to classify each \(\tilde{Y}(j)\), the label of pixel \(X(j)\), as a boundary pixel (\(\tilde{Y}(j) = 1\)) or not (\(\tilde{Y}(j) = 0\)). And we use \(\tilde{Y} = (\tilde{Y}(j), j = 1, 2, ..., |X|)\) to denote the corresponding detected boundary map. Considering the mini-batch with size equal to \(Z\), and the network with \(P\) sub-networks and \(Q\) levels in each sub-network, we demonstrate our end-to-end training as follows.
-
-\subsection{Formulation of the Multi-recursive-input}
-Let \(S_{p}^{(q)}\) be the side-output of the \(p^{th}\) level in the \(q^{th}\) sub-network, \(F^{(q)}\) and \(X^{(q)}\) be the fused prediction and training input in the \(q^{th}\) sub-network, now we have:
-
-\begin{eqnarray}
-X^{(q)} &=& 
-\begin{cases} 
-X &, q = 1 \cr
-X \circ S_{q-1}^{1} \circ S_{q-1}^{2} \circ \cdots \circ S_{q-1}^{Q} &, q > 1 \cr
-\end{cases}
-\end{eqnarray}
-Here \(\circ\) represents the concatenating operation along with the color channel. 
-
-\subsection{Loss Function}
-To demonstrate the loss function of our cascaded network, we firstly present the loss function of side-output \(S_{p}^{(q)}\):
-
-\begin{eqnarray}
-\begin{split}
-l_{p}^{(q)}(\textbf{W}^{(q)}, \textbf{w}_{p}^{(q)}; X^{(q)}, Y)
-=&-\alpha \sum_{j\in{|B|}}log(1 - sigmoid(s_{p}^{(q)}(j))) \\
-&-(1-\alpha) \sum_{j\in{|\bar{B}|}}log(sigmoid(s_{p}^{(q)}(j)))
-\end{split}
-\end{eqnarray}
-
-where \(\textbf{W}^{(q)}\), \(\textbf{w}_{p}^{(q)}\), \(|B|\) and \(|\bar{B}|\) refer to the model parameters of the \(q^{th}\) sub-network, ones of the \(S_{p}^{(q)}\), the sets of boundary and non-boundary ground-truth annotations, respectively. \(\alpha\) is the ratio of \(|\bar{B}|\) and \(|B|\), which cancels out the huge imbalance of positive samples (boundary pixels) and negative samples (non-boundary pixels) in some degree\cite{Xie2015}. 
-
-Let \(\beta_{p}^{(q)}\) be the weight of \(S_{p}^{(q)}\). Given the notation as follows:
-
-\begin{eqnarray*}
-\textbf{W} &=& \{\textbf{W}_{1}, \textbf{W}_{2}, \cdots , \textbf{W}^{(q)}\}, \\
-\textbf{w} &=& (\textbf{w}_{p}^{(q)}, p from 1 to P and q from 1 to Q), \\
-\end{eqnarray*}
-the loss of all the side-outputs in the \(q^{th}\) sub-network, \(L_S\), is the sum of the losses of all its side-outputs and the fusion output.
-
-\begin{eqnarray}
-L_S(\textbf{W}, \textbf{w}; X, Y) &=& \sum_{q=1}^{Q}\sum_{p=1}^{P}\beta_{p}^{(q)}l_{p}^{(q)}(\textbf{W}^{(q)}, \textbf{w}_{p}^{(q)}; X^{(q)}, Y)
-\end{eqnarray}
-
-All the side-outputs in one stage are fused through a 1 \(\times\) 1 convolution layer as mentioned in Section \ref{network structure}. The fusion of \(q^{th}\) sub-network is defined as:
-
-\begin{eqnarray} \label{fusion of subnet}
-F^{(q)} &=& \sum_{p=1}^{P}\theta_{p}^{(q)}S_{p}^{(q)}
-\end{eqnarray}
-where \(\theta_{p}^{(q)}\) is the fusion weight of \(S_{p}^{(q)}\).
-
-The fusion loss of \(q^{th}\) stage is:
-
-\begin{eqnarray}
-\begin{split}
-l_{f}^{(q)}(\textbf{W}^{(q)}, \textbf{w}^{(q)}; X^{(q)}, Y)
-=&-\alpha \sum_{j\in{|B|}}log(1 - sigmoid(F^{(q)}(j))) \\
-&-(1-\alpha) \sum_{j\in{|\bar{B}|}}log(sigmoid(F^{(q)}(j)))
-\end{split}
-\end{eqnarray}
-where \(\textbf{w}^{(q)}\) is the set of the parameters for all the side-outputs in stage \(q\).
-
-Similar to Function \ref{fusion of subnet}, the final prediction is produced by:
-
-\begin{eqnarray}
-F^{(f)} &=& \sum_{q=1}^{Q}\phi^{(q)}F^{(q)}
-\end{eqnarray}
-where \(\phi^{(q)}\) is the fusion weight of \(F^{(q)}\).
-
-The loss of all the fusion outputs is:
-\begin{eqnarray}
-L_{f}(\textbf{W}, \textbf{w}, \mathbf{\theta}, \mathbf{\phi}; X, Y) &=& \sum_{q=1}^{Q}\beta_{f}^{(q)}l_{f}^{(q)}(\textbf{W}^{(q)}, \textbf{w}^{(q)}; X^{(q)}, Y)
-\end{eqnarray}
-where \(\mathbf{\theta} = (\theta_{p}^{(q)}, q = 1, 2, ... , Q, p = 1, 2, ... , P)\), \(\mathbf{\phi} = (\phi^{(q)}, q = 1, 2, ... , Q)\) and \(\beta_{f}^{(q)}\) denotes the loss weight for each sub-network.
-
-Finally, we train all the parameters jointly in an end-to-end framework by minimize the following total loss:
-\begin{eqnarray}
-L_{t}(\textbf{W}, \textbf{w}, \mathbf{\theta}, \mathbf{\phi}; X, Y) &=& L_S(\textbf{W}, \textbf{w}; X, Y) + L_{f}(\textbf{W}, \textbf{w}, \mathbf{\theta}, \mathbf{\phi}; X, Y)
-\end{eqnarray}
-
-\section{Testing Phase} \label{testing phase}
-When testing, we input an image \(X\) into the first sub-network and obtain the fusion of each sub-network as Function \ref{fusion of subnet}, step by step. Considering the \(q^{th}\) stage as a function \(f^{(q)}\), the final prediction \(\tilde{Y}\) can be produced by:
-
-\begin{eqnarray}
-\tilde{S}_{p}^{(q)} &=& f^{(q)}(X^{(q)}, (\textbf{W}^{(1)})^{*}, ... , (\textbf{W}^{(Q)})^{*}, (\textbf{w}_{1}^{(Q)})^{*}, ... , (\textbf{w}_{P}^{(Q)})^{*}) \\
-\tilde{F}^{(q)} &=& \sum_{p=1}^{P}(\theta_{p}^{(q)})^{*}\tilde{S}_{p}^{(q)} \\
-\tilde{F}^{(f)} &=& \sum_{q=1}^{Q}(\phi^{(q)})^{*}\tilde{F}^{(q)} \\
-\tilde{Y} &=& sigmoid(\tilde{F}^{(f)})
-\end{eqnarray}
-
-\begin{figure}[t]
-  \centering
-  % Requires \usepackage{graphicx}
-  \includegraphics[width=15cm]{multi-recursive-input.png}\\
-  \caption{Multi-recursive-input \emph{vs.} Single-recursive-input.}\label{multi recursive input}
-\end{figure}
-
-\section{Model Interpretation} \label{interpretation}
-\subsection{Cascaded Architecture \emph{vs.} Single-stage Architecture}
-Such a cascaded architecture for object-level boundary detection can be interpreted as follows:
-
-On one hand, our eyes can capture various levels of data due to the information re-organization achieved by the multi-stage vision system in our brain.The proposed cascaded architecture mimics the multi-stage vision system of human-beings, by introducing the recursive links to re-filter the multi-scale features produced by the previous stage. As illustrated in Fig. \ref{interpretation_png}, to compare the side-outputs and fusions in row (in the same level), we find the boundary map of each stage is \emph{"clearer"} than the former stage. The cascaded network enables the later layers to have a higher-level scope, which breaks the limitation of the receptive filed size existing in a single-stage network. Comparing with a considerably deep single-stage network which has the same receptive size, in other words, our cascaded network will not suffer from the gradient vanishing  and be much easier to be trained.
-
-On the other hand, human can see both the local details and the object-level abstracts from an image, while not confused by the complex multi-scale information. It is mainly because our brain has a multi-stage vision system to filter these information and select the useful information from the right scale\cite{Helmstaedter2013}. the joint training and feature fusion of the proposed method let data drives the choice from the results of all the stages and levels.
-
-\subsection{Multi-recursive-input \emph{vs.} Single-recursive-input}
-
-One of the biggest differences between our work with others is the multi-recursive-input. The qualitative comparison can be found in Fig. \ref{multi recursive input}, where the single-recursive-input only reuses the large scale features in the next stage and thus loses the ability to accurately localize the boundary.
-
-\begin{figure}[t]
-  \centering
-  % Requires \usepackage{graphicx}
-  \includegraphics[width=15cm]{interpretation.png}\\
-  \caption{Prediction exmaples from different side-outputs and fused outputs in different stages.}\label{interpretation_png}
-\end{figure}
-
-\subsection{End-to-end Training \emph{vs.} Stepwise Self-tuning}
-To train our network end-to-end, the former stages and the next stages can have an effect on each other. Instead of fixing the model parameters of the previous stages, we let data teach how the network works. With enough training data and the proposed easy-to-train network architecture, our network is able to adjust all the parameters jointly and benefit from it to achieve a better performance than trained stepwise. Refer to Chapter \ref{experiments} for quantization results and details.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-\chapter{Experiments} \label{experiments}
+\chapter{Implement} \label{implement}
 As addressed in Chapter \ref{introduction}, we firstly test our cascaded fully convolutional network in the task of neuronal boundary detection on two mainstream datasets, Mouse Piriform Cortex Dataset\cite{Lee2015} and ISBI 2012 EM Segmentation Dataset\cite{Ronneberger2015}, then extend to adapt with the object boundary detection in natural images on the large object boundary dataset, PASCAL VOC Contour Dataset\cite{Yang2016}. Besides, we will give the comparative experiments to explain how the performance is achieved by the proposed network structure.
 
 \section{Neuronal Boundary Detection in EM Images}
