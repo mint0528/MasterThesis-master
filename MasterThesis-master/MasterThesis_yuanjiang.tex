@@ -173,7 +173,27 @@ The rest of this thesis is structured as follows: Chapter 2 introduces some rela
 
 \chapter{Methodology} \label{methodology}
 
-\section{Schedule and Cost}
+\section{Data preprocess}
+
+In this research, we get a dataset of original flight schedule from airline company at beginning.
+This dataset includes flight id over a period of time, with its corresponding departure time and airport, landing time and airport, aircraft id and passenger information.
+We consider a typical disruption like airport closure. 
+It usually occurs unpredictably, and once it occurs, the closed airport will limit either departure or landing activities.
+So when the bad weather causes airport closure, we suppose that airline company has internal notice of closure before real closure time for captains to react and we assume notice time is one hour earlier than closure time.
+For optimization process, we intercept the flights from notice time to the end of that day.
+Cause flight schedule is disrupted by one airport closure, we develop some rules for data preprocess before optimization process.
+\begin{enumerate}
+    \item Flights limitation: airport closure limits aircraft departure, so the flights which departure from closure airport with departure time after closure time will be cancelled.
+    \item Aircraft availability: at the notice time, some aircraft have already been in mid-flight. For these aircraft, they will be available again after finishing current flight. The available time of these aircraft will be the landing time of their current flight, in the airport of their current flights’ landing airport.
+    
+    But there is a special series of aircraft should be considered. These aircraft departure before notice time so their captain will receive notice of airport closure during mid-flight. However, because these flights are scheduled to land at closed airport after closure time, they have to fly back to departure airport, and these aircraft can used again at \begin{equation*}
+    notice\  time+(notice\  time-departure\  time.)    
+    \end{equation*}
+\end{enumerate}
+
+With this preprocess above, we can get a list of flights remained and a series of aircraft available. With these two dataset, we can get the relationship between aircraft and flights and then create elicitation factor table. The specific operation methods will be explained in section 4.
+
+\section{Adjustment and evaluation}
 
 \subsection{Flight adjustment method}
 When a scheduled flight timetable is disrupted, for example, the bad weather causes airport closure or aircraft failure happens, we need to adjust the following flights. In general, there are some typical methods for adjustment.
@@ -317,7 +337,7 @@ For basic ant colony algorithm, there are two main process:
     \item State Transition:
     
     In each iteration, every ant moves one step, the probability of ant \(k\) to move from state \(i\) to state \(j\),can be calculated by this function:
-    \begin{eqnarray}
+    \begin{eqnarray}\label{probability}
     p_{ij}^k &=&
     \begin{cases}
     \cfrac{[\tau(i,j)]^\alpha +[\eta(i,j)]^\beta}{\sum_{z\in J_k(i)} [\tau(i,z)]^\alpha +[\eta(i,z)]^\beta} &, j\in allowed_k \cr
@@ -354,14 +374,18 @@ For basic ant colony algorithm, there are two main process:
 
 
 \section{Innovation} \label{innovation}
+In this module, we try to widen the scope of flight recovery problem with application of ant colony optimization. H. Sousa(2015) considered a disruption scenario of aircraft failure during a time period. In this research, we consider a more complicated circumstance of airport closure which is also more close to reality. When airport closure (usually caused by bad weather) happens, it will influence a series of flights and limit aircraft’s departure and landing. The challenge is this problem involves a large number of flights and status of flight and aircraft is changing over the time. So we insert data preprocess, to divide these flights and aircraft into different situations and handle them separately. 
 
+Another improvement is that we divide passengers into two parts and consider those passengers buy connecting flights. In past thesis, maintaining passengers’ satisfaction is considered as an important influencing factor, but it always to be analyzed as a whole unit. In this research, we think passengers with connecting flights are special, because if the delayed or cancelled flight is their first flight of connecting tickets, they will suffer greater impacts than other passengers. So in this module, no matter the flight is delayed or cancelled, we assume that the passengers with connecting tickets on this flight cannot catch the next flight. So that delaying or cancelling flights with connecting passengers will have higher punishment and cost more.
+
+For algorithm, we add randomness in selecting next node part. In each iteration, every ant creates its own route and it chooses the next node by probability. This probability is calculated by the pheromone value on the path connecting the current node and the next one. However, it we only use this rules, ants will more likely to choose the path that have been past before. So we insert some randomness into selecting process. In this way, ants will have more probability to choose path randomly in the first couple of iteration, and the algorithm can avoid falling into local minimum too fast.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 \chapter{Implement} \label{implement}
-As addressed in Chapter \ref{introduction}, we firstly test our cascaded fully convolutional network in the task of neuronal boundary detection on two mainstream datasets, Mouse Piriform Cortex Dataset\cite{Lee2015} and ISBI 2012 EM Segmentation Dataset\cite{Ronneberger2015}, then extend to adapt with the object boundary detection in natural images on the large object boundary dataset, PASCAL VOC Contour Dataset\cite{Yang2016}. Besides, we will give the comparative experiments to explain how the performance is achieved by the proposed network structure.
+In this section, I will explain the specific step of optimization process and use a couple of flights as an example. At the beginning of the whole process, the input is original flight schedule and disruption scenario includes the time and location of occurrence. And our goal is to output a feasible solution with fitness which is total cost in this model as less as possible using ant colony optimization.
 
 \section{Neuronal Boundary Detection in EM Images}
 
